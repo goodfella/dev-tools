@@ -13,7 +13,7 @@
   (let*
       ((path (read-file-name "path: "))
        (committish (read-from-minibuffer "committish: "))
-       (gittopdir (git-top-dir (file-name-directory path)))
+       (gittopdir (my-git-top-dir (file-name-directory path)))
        (relpath (file-relative-name path gittopdir))
        (buffername (format "%s:%s" relpath committish)))
     (let* ((default-directory gittopdir))
