@@ -1,4 +1,4 @@
-(defun my-add-gtags-path ()
+(defun my-gtags-add-path ()
   "Adds a gtags path to GTAGSLIBPATH"
   (interactive)
   (let
