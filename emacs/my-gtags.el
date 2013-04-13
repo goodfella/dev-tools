@@ -6,5 +6,5 @@
        (gtagslibpath (getenv "GTAGSLIBPATH")))
     (setenv "GTAGSLIBPATH"
 	    (if (> (length gtagslibpath) 0)
-		(mapconcat (lambda (s) (format "%s" s)) (delete-dups (append (make-list 1 path) (parse-colon-path gtagslibpath))) (path-separator))
+		(mapconcat (lambda (s) (format "%s" s)) (delete-dups (append (make-list 1 path) (parse-colon-path gtagslibpath))) path-separator)
 	      path))))
