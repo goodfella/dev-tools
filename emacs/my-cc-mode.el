@@ -17,6 +17,7 @@
   "Sets up my style"
   (interactive)
   (c-set-style "ellmentel")
+  (linum-mode)
   (setq c-basic-offset 4)
   (setq-default indent-tabs-mode nil)
   (c-set-offset 'inclass 'my-c++-lineup-inclass)
