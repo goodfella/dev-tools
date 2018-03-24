@@ -23,4 +23,6 @@
   (c-set-offset 'inclass 'my-c++-lineup-inclass)
   (c-set-offset 'friend '-)
   (c-set-offset 'access-label '0)
+  (c-set-offset 'substatement-open '0)
+  (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
   (message "Using my C++ Mode"))
