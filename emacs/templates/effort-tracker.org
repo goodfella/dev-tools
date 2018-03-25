@@ -1,0 +1,13 @@
+#+COLUMNS: %40ITEM(Task) %8EFFORT(Estimated hrs){:} %16SCHEDULED(Started) %16FINISHED(Finished)
+#+OPTIONS: tags:nil author:nil toc:nil
+
+#+BEGIN_COMMENT
+- Tasks are added as headings below the "Tasks" heading
+#+END_COMMENT
+
+* Tasks [0%]
+#+BEGIN: columnview :hlines 1 :id local :maxlevel 5 :indent t :skip-empty-rows t
+| Task | Estimated hrs | Started | Finished | Duration Days | Est Finish |
+|------+---------------+---------+----------+---------------+------------|
+#+TBLFM: $5=$4-$3::@1$5=Duration Days::$6='(completion-date $2 1 $3)::@1$6=Est Finish
+#+END:

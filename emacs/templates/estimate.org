@@ -1,0 +1,14 @@
+#+COLUMNS: %25ITEM(Task) %17EFFORT(Estimated hours){:}
+#+OPTIONS: tags:nil author:nil toc:nil
+
+#+BEGIN_COMMENT
+- Tasks are added as headings below the "Tasks" heading
+- Estimates are added in column view mode
+#+END_COMMENT
+
+* Tasks
+#+BEGIN: columnview :hlines 1 :id global :indent t
+| Task  | Estimated hours |
+|-------+-----------------|
+| Tasks |                 |
+#+END
