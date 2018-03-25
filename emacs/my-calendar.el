@@ -30,11 +30,20 @@
     (org-read-date nil nil (concat "++" (number-to-string days)) nil (org-time-string-to-time start-date))))
 
 
-(defun completion-date (hours &optional optional-start-date)
-  "Returns the workday a task will be completed given th number of hours it takes"
+(defun completion-date (hours &optional optional-effectiveness optional-start-date)
+  "
+  Returns the workday a task will be completed
+
+  hours: The number of hours the task takes
+  optional-effectiveness: Decimal representation of effectivenes
+  optional-start-date: The day the task is started
+  "
   (let* ((num-hours (string-to-number (nth 0 (split-string hours ":"))))
-	 (days (if (= (% num-hours 8) 0)
-		   (/ num-hours 8)
-		 (+ (/ num-hours 8) 1))))
-    (message "%d " days)
+	 (effectiveness (if optional-effectiveness
+			    optional-effectiveness
+			  1))
+	 (hours-per-day (floor (* 8 effectiveness)))
+	 (days (if (= (% num-hours hours-per-day) 0)
+		   (/ num-hours hours-per-day)
+		 (+ (/ num-hours hours-per-day) 1))))
     (workday (concat "++" (number-to-string days)) optional-start-date)))
