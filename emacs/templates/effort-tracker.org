@@ -1,4 +1,4 @@
-#+COLUMNS: %40ITEM(Task) %8EFFORT(Estimated hrs){:} %16SCHEDULED(Started) %16FINISHED(Finished)
+#+COLUMNS: %40ITEM(Task) %11EFFORT(Est. Hours){:} %16SCHEDULED(Started) %16FINISHED(Finished) %5EFFECTIVENESS(Eff.) %5RESOURCES(Res) 
 #+OPTIONS: tags:nil author:nil toc:nil
 
 #+BEGIN_COMMENT
@@ -7,7 +7,7 @@
 
 * Tasks [0%]
 #+BEGIN: columnview :hlines 1 :id local :maxlevel 5 :indent t :skip-empty-rows t
-| Task | Estimated hrs | Started | Finished | Duration Days | Est Finish |
-|------+---------------+---------+----------+---------------+------------|
-#+TBLFM: $5=$4-$3::@1$5=Duration Days::$6='(completion-date $2 1 $3)::@1$6=Est Finish
+| Task | Est. Hours | Started | Finished | Eff. | Res | Duration Days | Est Finish |
+|------+------------+---------+----------+------+-----+---------------+------------|
+#+TBLFM: $7=$4-$3::@1$7=Duration Days::$8='(completion-date $2 $5 $6 $3)::@1$8=Est Finish
 #+END:
