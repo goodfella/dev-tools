@@ -3,6 +3,7 @@
   (or (null string)
       (zerop (length string))))
 
+
 (defun workday (from-string &optional optional-start-date)
   "Returns a work day given a start date and an org-mode from-string"
   (let* ((start-date (format-time-string "%Y-%m-%d" (if (not (empty-string-p optional-start-date))
@@ -30,7 +31,7 @@
     (org-read-date nil nil (concat "++" (number-to-string days)) nil (org-time-string-to-time start-date))))
 
 
-(defun completion-date (hours &optional optional-effectiveness optional-start-date)
+(defun completion-date (hours &optional optional-effectiveness optional-people optional-start-date)
   "
   Returns the workday a task will be completed
 
@@ -38,12 +39,22 @@
   optional-effectiveness: Decimal representation of effectivenes
   optional-start-date: The day the task is started
   "
-  (let* ((num-hours (string-to-number (nth 0 (split-string hours ":"))))
+  (let* ((num-hours (if (stringp hours)
+			(string-to-number (nth 0 (split-string hours ":")))
+		      hours))
+
 	 (effectiveness (if optional-effectiveness
-			    optional-effectiveness
+			    (if (stringp optional-effectiveness)
+				(string-to-number optional-effectiveness)
+			      optional-effectiveness)
 			  1))
+	 (people (if optional-people
+		     (if (stringp optional-people)
+			 (string-to-number optional-people)
+		       optional-people)
+		   1))
 	 (hours-per-day (floor (* 8 effectiveness)))
-	 (days (if (= (% num-hours hours-per-day) 0)
-		   (/ num-hours hours-per-day)
-		 (+ (/ num-hours hours-per-day) 1))))
+	 (days (floor (/ (if (= (% num-hours hours-per-day) 0)
+			     (/ num-hours hours-per-day)
+			   (+ (/ num-hours hours-per-day) 1))) people)))
     (workday (concat "++" (number-to-string days)) optional-start-date)))
