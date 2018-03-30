@@ -1,3 +1,5 @@
+(require 'org)
+
 (defun empty-string-p (string)
   "Returns true if a string is empty or nil"
   (or (null string)
@@ -45,12 +47,16 @@
 
 	 (effectiveness (if optional-effectiveness
 			    (if (stringp optional-effectiveness)
-				(string-to-number optional-effectiveness)
+				(if (empty-string-p optional-effectiveness)
+				    1
+				  (string-to-number optional-effectiveness))
 			      optional-effectiveness)
 			  1))
 	 (people (if optional-people
 		     (if (stringp optional-people)
-			 (string-to-number optional-people)
+			 (if (empty-string-p optional-people)
+			     1
+			   (string-to-number optional-people))
 		       optional-people)
 		   1))
 	 (hours-per-day (floor (* 8 effectiveness)))
