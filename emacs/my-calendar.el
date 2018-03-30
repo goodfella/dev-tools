@@ -39,6 +39,7 @@
 
   hours: The number of hours the task takes
   optional-effectiveness: Decimal representation of effectivenes
+  optional-people: The number of people working on the task
   optional-start-date: The day the task is started
   "
   (let* ((num-hours (if (stringp hours)
