@@ -1,0 +1,11 @@
+[user]
+	name = Nick Guiffrida
+	email = goodfella005@gmail.com
+[core]
+	editor = emacs
+[alias]
+	co = checkout
+	st = status
+	diffc = diff --cached
+	ci = commit
+	cia = commit --amend
