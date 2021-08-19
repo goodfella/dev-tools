@@ -2,13 +2,17 @@
 
 if [ "$1" == "--umount" ]; then
     shift
-    find $1/enc-mount -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
-    sudo umount $1/enc-mount
-    sudo cryptsetup luksClose $(basename $1)
-    rmdir $1/enc-mount
-    find $1 -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
-    sudo umount $1
-    rmdir $1
+    ramdisk_path=$1
+    shift
+    luks_name=$(basename $ramdisk_path)
+
+    find $ramdisk_path/enc-mount -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    sudo umount $ramdisk_path/enc-mount
+    sudo cryptsetup luksClose ${luks_name}
+    rmdir $ramdisk_path/enc-mount
+    find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    sudo umount $ramdisk_path
+    rmdir $ramdisk_path
     exit 0
 fi
 
@@ -16,32 +20,31 @@ ramdisk_name=one-time-mount
 ramdisk_path=$(mktemp -d one-time-mount.XXX)
 ramdisk_size_mb=600
 shift
-enc_file_path=${ramdisk_path}/.enc-device
-enc_file_key_path=${ramdisk_path}/.enc-key
-enc_mount_path=${ramdisk_path}/enc-mount
-enc_luks_name=$(basename ${ramdisk_path})
+luks_device=${ramdisk_path}/.enc-device
+luks_mount_path=${ramdisk_path}/enc-mount
+luks_name=$(basename ${ramdisk_path})
 
+sudo mount -t tmpfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
 
-mkdir -p $ramdisk_path
-if ! grep -q "$ramdisk_name.*$ramdisk_path tmpfs" /proc/mounts ; then
-    sudo mount -t tmpfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
-fi
+luks_key_path=$(mktemp -p ${ramdisk_path} .XXXXXX)
 
 # generate sparse device file for loopback mounting
-dd if=/dev/zero of=${enc_file_path} seek=$((ramdisk_size_mb - 50))M count=0 bs=1
+dd if=/dev/zero of=${luks_device} seek=$((ramdisk_size_mb - 50))M count=0 bs=1
 
 # generate key file
-dd if=/dev/urandom of=${enc_file_key_path} count=$((4096/512))
+dd if=/dev/urandom of=${luks_key_path} bs=512 count=1
 
 # create LUKS volume
-sudo cryptsetup -q luksFormat ${enc_file_path} ${enc_file_key_path}
-sudo cryptsetup --key-file ${enc_file_key_path} luksOpen ${enc_file_path} ${enc_luks_name}
+sudo cryptsetup -q luksFormat ${luks_device} ${luks_key_path}
+sudo cryptsetup --key-file ${luks_key_path} luksOpen ${luks_device} ${luks_name}
 
 # throw away the key
-shred -z -u ${enc_file_key_path}
+shred -z -u ${luks_key_path}
 
-sudo mkfs.ext2 -E root_owner=$(id -u):$(id -g) /dev/mapper/${enc_luks_name}
+sudo mkfs.ext2 -E root_owner=$(id -u):$(id -g) /dev/mapper/${luks_name}
 
 # mount encrypted device
-mkdir -p ${enc_mount_path}
-sudo mount -o user /dev/mapper/${enc_luks_name} ${enc_mount_path}
+mkdir -p ${luks_mount_path}
+sudo mount -o user /dev/mapper/${luks_name} ${luks_mount_path}
+
+echo ${luks_mount_path}
