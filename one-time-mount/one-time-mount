@@ -27,7 +27,7 @@ if ! grep -q "$ramdisk_name.*$ramdisk_path tmpfs" /proc/mounts ; then
     sudo mount -t tmpfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
 fi
 
-# generate device file for loopback mounting
+# generate sparse device file for loopback mounting
 dd if=/dev/zero of=${enc_file_path} seek=$((ramdisk_size_mb - 50))M count=0 bs=1
 
 # generate key file
