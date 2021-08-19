@@ -7,13 +7,17 @@ if [ "$1" == "--umount" ]; then
     luks_name=$(basename $ramdisk_path)
 
     find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    sync
     sudo umount $ramdisk_path
     sudo cryptsetup luksClose ${luks_name}
     find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    sync
     sudo umount $ramdisk_path
     ramdisk_new_name=$(basename $(mktemp --dry-run XXXXXX))
     mv ${ramdisk_path} ${ramdisk_new_name}
+    sync
     rmdir ${ramdisk_new_name}
+    sync
     exit 0
 fi
 
@@ -42,6 +46,7 @@ sudo cryptsetup --key-file ${luks_key_path} luksOpen ${luks_device} ${luks_name}
 
 # throw away the key
 shred -z -u ${luks_key_path}
+sync
 
 sudo mkfs.ext2 -E root_owner=$(id -u):$(id -g) /dev/mapper/${luks_name}
 
