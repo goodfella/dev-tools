@@ -19,13 +19,13 @@ ramdisk_name=one-time-mount
 ramdisk_path=$(mktemp -d one-time-mount.XXX)
 ramdisk_size_mb=600
 shift
-luks_device=${ramdisk_path}/.enc-device
 luks_mount_path=${ramdisk_path}
 luks_name=$(basename ${ramdisk_path})
 
 sudo mount -t ramfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
 sudo chown -R $(id -u):$(id -g) ${ramdisk_path}
 
+luks_device=$(mktemp -p ${ramdisk_path} .XXXXXX)
 luks_key_path=$(mktemp -p ${ramdisk_path} .XXXXXX)
 
 # generate sparse device file for loopback mounting
