@@ -6,10 +6,9 @@ if [ "$1" == "--umount" ]; then
     shift
     luks_name=$(basename $ramdisk_path)
 
-    find $ramdisk_path/enc-mount -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
-    sudo umount $ramdisk_path/enc-mount
+    find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    sudo umount $ramdisk_path
     sudo cryptsetup luksClose ${luks_name}
-    rmdir $ramdisk_path/enc-mount
     find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
     sudo umount $ramdisk_path
     rmdir $ramdisk_path
@@ -21,7 +20,7 @@ ramdisk_path=$(mktemp -d one-time-mount.XXX)
 ramdisk_size_mb=600
 shift
 luks_device=${ramdisk_path}/.enc-device
-luks_mount_path=${ramdisk_path}/enc-mount
+luks_mount_path=${ramdisk_path}
 luks_name=$(basename ${ramdisk_path})
 
 sudo mount -t ramfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
