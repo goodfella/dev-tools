@@ -13,7 +13,7 @@ if [ "$1" == "--umount" ]; then
     find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
     sync
     sudo umount $ramdisk_path
-    ramdisk_new_name=$(basename $(mktemp --dry-run XXXXXX))
+    ramdisk_new_name=$(basename $(mktemp --dry-run XXXXXXXXXXXXXXXXXX))
     mv ${ramdisk_path} ${ramdisk_new_name}
     sync
     rmdir ${ramdisk_new_name}
