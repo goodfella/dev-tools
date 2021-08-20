@@ -28,7 +28,7 @@ shift
 luks_mount_path=${ramdisk_path}
 luks_name=$(basename ${ramdisk_path})
 
-sudo mount -t ramfs -o size=${ramdisk_size_mb}M,user ${ramdisk_name} $ramdisk_path
+sudo mount -t ramfs -o size=${ramdisk_size_mb}M ${ramdisk_name} $ramdisk_path
 sudo chown -R $(id -u):$(id -g) ${ramdisk_path}
 
 luks_device=$(mktemp -p ${ramdisk_path} .XXXXXX)
