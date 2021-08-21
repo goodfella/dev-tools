@@ -4,27 +4,36 @@ if [ "$1" == "--umount" ]; then
     shift
     ramdisk_path=$1
     shift
-    luks_name=$(basename $ramdisk_path)
+    ramdisk_name=$(basename ${ramdisk_path})
+    luks_name=$ramdisk_name
 
-    find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
+    # shred all files in the LUKS volume
+    find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \; |& grep -v 'lost+found.*Permission denied'
     sync
+
+    # Close the LUKS volume
     sudo umount $ramdisk_path
     sudo cryptsetup luksClose ${luks_name}
+
+    # shred all files in the ramdisk mount
     find $ramdisk_path -uid $(id -u) -a -type f -execdir shred -z -u \{\} \;
     sync
+
     sudo umount $ramdisk_path
-    ramdisk_new_name=$(basename $(mktemp --dry-run XXXXXXXXXXXXXXXXXX))
+
+    # Give the ramdisk directory a random name
+    ramdisk_new_name=$(basename $(mktemp --dry-run $(echo $ramdisk_name | tr '[:print:]' X)))
     mv ${ramdisk_path} ${ramdisk_new_name}
     sync
+
     rmdir ${ramdisk_new_name}
     sync
     exit 0
 fi
 
-ramdisk_name=one-time-mount
-ramdisk_path=$(mktemp -d one-time-mount.XXX)
 ramdisk_size_mb=600
-shift
+ramdisk_name=one-time-mount
+ramdisk_path=$(mktemp -d ${ramdisk_name}.XXX)
 luks_mount_path=${ramdisk_path}
 luks_name=$(basename ${ramdisk_path})
 
