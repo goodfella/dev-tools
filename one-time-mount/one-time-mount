@@ -51,8 +51,8 @@ if [ -n "$umount_path" ]; then
 fi
 
 ramdisk_size_mb=600
-ramdisk_name=one-time-mount
-ramdisk_path=$(mktemp -d ${ramdisk_name}.XXX)
+ramdisk_name=$(mktemp -d XXXXXXXXXXXXXX)
+ramdisk_path=${ramdisk_name}
 luks_mount_path=${ramdisk_path}
 luks_name=$(basename ${ramdisk_path})
 
