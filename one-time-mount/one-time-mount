@@ -12,7 +12,7 @@ umount_path=
 while [ $# -gt 0 ];
 do
     case $1 in
-	--umount)
+	--umount|-u)
 	    shift
 	    umount_path=$1
 	    shift
