@@ -1,9 +1,28 @@
 #!/bin/bash
 
-if [ "$1" == "--umount" ]; then
-    shift
-    ramdisk_path=$1
-    shift
+# options to add
+
+# --luks-device-dir
+# --luks-device-size
+# --key-device
+# --key-size
+
+umount_path=
+
+while [ $# -gt 0 ];
+do
+    case $1 in
+	--umount)
+	    shift
+	    umount_path=$1
+	    shift
+	    break
+	    ;;
+    esac
+done
+
+if [ -n "$umount_path" ]; then
+    ramdisk_path="$umount_path"
     ramdisk_name=$(basename ${ramdisk_path})
     luks_name=$ramdisk_name
 
