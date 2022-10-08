@@ -50,6 +50,17 @@ if [ -n "$umount_path" ]; then
     exit 0
 fi
 
+# Steps
+
+# 1) Create a directory with a random name (ramdisk_name)
+# 2) Mount a ramdisk on top of ramdisk_name
+# 3) Create a sparse file with a random name in the ramdisk
+# 4) Generate a LUKS key file
+# 5) Create a LUKS volume
+# 6) Open the LUKS volume
+# 7) Shred the LUKS key
+# 8) Mount the LUKS volume
+
 ramdisk_size_mb=600
 ramdisk_name=$(mktemp -d XXXXXXXXXXXXXX)
 ramdisk_path=${ramdisk_name}
