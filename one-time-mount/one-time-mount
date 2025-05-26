@@ -2,6 +2,8 @@
 
 # options to add
 
+# set -x
+
 # --luks-device-dir
 # --luks-device-size
 # --key-device
@@ -74,10 +76,10 @@ luks_device=$(mktemp -p ${ramdisk_path} .XXXXXX)
 luks_key_path=$(mktemp -p ${ramdisk_path} .XXXXXX)
 
 # generate sparse device file for loopback mounting
-dd if=/dev/zero of=${luks_device} seek=$((ramdisk_size_mb - 50))M count=0 bs=1
+dd if=/dev/zero of=${luks_device} seek=$((ramdisk_size_mb - 50))M count=0 bs=1 > /dev/null
 
 # generate key file
-dd if=/dev/urandom of=${luks_key_path} bs=512 count=1
+dd if=/dev/urandom of=${luks_key_path} bs=512 count=1 > /dev/null
 
 # create LUKS volume
 sudo cryptsetup -q luksFormat ${luks_device} ${luks_key_path}
@@ -87,7 +89,7 @@ sudo cryptsetup --key-file ${luks_key_path} luksOpen ${luks_device} ${luks_name}
 shred -z -u ${luks_key_path}
 sync
 
-sudo mkfs.ext2 -E root_owner=$(id -u):$(id -g) /dev/mapper/${luks_name}
+sudo mkfs.ext2 -E root_owner=$(id -u):$(id -g) /dev/mapper/${luks_name} > /dev/null
 
 # mount encrypted device
 mkdir -p ${luks_mount_path}
