@@ -1,0 +1,16 @@
+#/bin/bash
+
+# unmounts an encrypted file based partition that was previously
+# mounted with enc-file-mount
+
+set -e
+
+FILE_PATH=$1
+shift
+
+LOOP_DEV=$(losetup -j ${FILE_PATH} | cut -f1 -d:)
+
+sync
+sudo umount ~/enc-file
+sudo cryptsetup luksClose enc-file
+sudo losetup -d $LOOP_DEV
