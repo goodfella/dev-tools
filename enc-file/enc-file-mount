@@ -6,7 +6,7 @@ set -e
 # commands:
 
 # truncate -s <size> <filename>
-# sudo losetup -f --show <filename>
+# sudo losetup -fL --show <filename>
 # sudo cryptsetup luksFormat /dev/loopX
 # sudo cryptsetup luksOpen /dev/loopX c1
 # sudo mkfs.ext4 /dev/mapper/c1
@@ -15,7 +15,7 @@ FILE_PATH=$1
 shift
 
 
-LOOP_DEV=$(sudo losetup -f --show $FILE_PATH)
+LOOP_DEV=$(sudo losetup -fL --show $FILE_PATH)
 sudo cryptsetup luksOpen $LOOP_DEV enc-file
 mkdir -p ~/enc-file
 sudo mount /dev/mapper/enc-file ~/enc-file
