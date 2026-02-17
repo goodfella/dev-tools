@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+SIZE=$1
+shift
+
+PATH=$1
+shift
+
+truncate -s $SIZE $PATH
+LOOPDEV=$(sudo losetup -fL --show $PATH)
+LUKSDEV=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 8)
+
+sudo cryptsetup luksFormat $LOOPDEV
+sudo cryptsetup luksOpen $LOOPDEV $LUKSDEV
+sudo mkfs.ext4 /dev/mapper/$LUKSDEV
+
+sudo cryptsetup luksClose $LUKSDEV
+sudo losetup -d $LOOPDEV
