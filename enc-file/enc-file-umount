@@ -5,12 +5,17 @@
 
 set -e
 
+# path to the encrypted file
 FILE_PATH=$1
+shift
+
+# path to the directory the encrypted file was mounted on
+MOUNT_DIR=$1
 shift
 
 LOOP_DEV=$(losetup -j ${FILE_PATH} | cut -f1 -d:)
 
 sync
-sudo umount ~/enc-file
+sudo umount ${MOUNT_DIR}
 sudo cryptsetup luksClose enc-file
 sudo losetup -d $LOOP_DEV

@@ -11,11 +11,15 @@ set -e
 # sudo cryptsetup luksOpen /dev/loopX c1
 # sudo mkfs.ext4 /dev/mapper/c1
 
+# Path to the encrypted file
 FILE_PATH=$1
 shift
 
+# Path to the directory to mount the file on
+MOUNT_DIR=$1
+shift
 
 LOOP_DEV=$(sudo losetup -fL --show $FILE_PATH)
 sudo cryptsetup luksOpen $LOOP_DEV enc-file
-mkdir -p ~/enc-file
+mkdir -p ${MOUNT_DIR}
 sudo mount /dev/mapper/enc-file ~/enc-file
